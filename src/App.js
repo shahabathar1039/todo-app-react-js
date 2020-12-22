@@ -14,8 +14,13 @@ function App() {
 
   // UseEffect Funtion
   useEffect(() => {
-    filterHandler()
-  }, [todos, status])
+    getLocalTodos();
+  }, []);
+
+  useEffect(() => {
+    filterHandler();
+    saveLocalStorage();
+  }, [todos, status]);
 
   // Filter Todo Function
   const filterHandler = () => {
@@ -29,6 +34,20 @@ function App() {
       default:
         setFilteredTodos(todos)
         break
+  }
+}
+
+  //Saving Data On Local Storage
+  const saveLocalStorage = () => {
+    localStorage.setItem("todos", JSON.stringify(todos))
+  }
+  
+  const getLocalTodos = () => {
+    if(localStorage.getItem("todos") === null) {
+      localStorage.setItem("todos", JSON.stringify([]))
+    } else {
+      let todoLocal = JSON.parse(localStorage.getItem("todos"))
+      setTodos(todoLocal)
     }
   }
 
@@ -39,7 +58,7 @@ function App() {
         <h1>My Todo App</h1>
       </header>
       <Form todos={todos} setTodos={setTodos} inputText={inputText} setInputText={setInputText} setStatus={setStatus} />
-      <TodoList todos={todos} setTodos={setTodos} />
+      <TodoList  filteredTodos={filteredTodos} todos={todos} setTodos={setTodos} />
     </div>
   );
 }
